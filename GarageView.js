@@ -1,26 +1,24 @@
 var GarageView = Backbone.View.extend({
-  events: {
-    click: function() {
-      console.log('garageView was clicked', this);
-    }
-  },
-  initialize: function() {
-    this.render();
-    // better to use `listenTo` than `on` for event listeners
-    // read more here: http://backbonejs.org/#Events-listenTo
+  tagName: 'table',
+  template: _.template('<tr><td><%= make %></td></tr>'),
+
+  initialize: function () {
     this.listenTo(this.collection, 'change', this.render);
+    this.render();
   },
-  render: function() {
-    var domElement = this.$el.html('');
+
+  events: {
+
+  },
+
+  render: function () {
+    var node = this.$el.html('');
+
     var _this = this;
-    // get data from each model (which exists inside the collection)
-    this.collection.each(function(model) {
-      // with that data, we create some html
-      var carView = new CarView({ model: model }).render();
-      // we add that HTML to the body
-      domElement.append(carView);
+    this.collection.forEach(function (model) {
+      node.append(_this.template(model.attributes));
     });
-    $('body').append(this.$el);
+
+    $('body').append(node);
   },
-  tagName: 'table'
 });
